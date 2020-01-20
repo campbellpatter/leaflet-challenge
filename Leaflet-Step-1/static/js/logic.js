@@ -1,5 +1,5 @@
 // Store our API endpoint inside queryUrl
-var queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/2.5_day.geojson";
+var queryUrl = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/1.0_day.geojson";
 
 // Perform a GET request to the query URL
 d3.json(queryUrl, function(data) {
@@ -31,11 +31,11 @@ function createFeatures(earthquakeData) {
     // Create a GeoJSON layer containing the features array on the earthquakeData object
     // Run the onEachFeature function once for each piece of data in the array
 
-    function styleInfo(feature) {
+    function styleMarker(feature) {
         return {
           opacity: 1,
           fillOpacity: 0.75,
-          fillColor: getColor(feature.properties.mag),
+          fillColor: chooseColor(feature.properties.mag),
           color: "#000000",
           radius: getRadius(feature.properties.mag),
           stroke: true,
@@ -44,18 +44,18 @@ function createFeatures(earthquakeData) {
       }
     
       // This function determines the color of the marker based on the magnitude of the earthquake.
-      function getColor(magnitude) {
+      function chooseColor(magnitude) {
         switch (true) {
         case magnitude > 5:
-          return "#ea2c2c";
+          return "#c80cd4";
         case magnitude > 4:
-          return "#ea822c";
+          return "#5a0cd4";
         case magnitude > 3:
-          return "#ee9c00";
+          return "#0c2ed4";
         case magnitude > 2:
-          return "#eecc00";
+          return "#0ca7d4";
         case magnitude > 1:
-          return "#d4ee00";
+          return "#0cd4cf";
         default:
           return "#98ee00";
         }
@@ -67,8 +67,8 @@ function createFeatures(earthquakeData) {
         if (magnitude === 0) {
           return 1;
         }
-    
-        return magnitude * 4;
+
+        return magnitude * 5;
       }
     
     var earthquakes = L.geoJSON(earthquakeData, {
@@ -76,7 +76,7 @@ function createFeatures(earthquakeData) {
             return L.circleMarker(latlng);
           },
 
-        style: styleInfo,
+        style: styleMarker,
 
         onEachFeature: onEachFeature
     });
